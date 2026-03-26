@@ -1,0 +1,74 @@
+# =============================================================================
+# ICBHIMambaNet - Configuration
+# All hyperparameters for reproducibility
+# =============================================================================
+
+# Paths
+paths:
+  train_json: "datafiles/icbhi_train.json"
+  test_json: "datafiles/icbhi_test.json"
+  label_csv: "datafiles/icbhi_labels.csv"
+  checkpoint_dir: "checkpoints"
+  results_dir: "results/comparative_study"
+  figures_dir: "figures"
+  data_dir: "data/ICBHI_final_database"
+  cycles_dir: "data/cycles"
+
+# Dataset
+dataset:
+  sample_rate: 22050
+  cycle_duration: 5.0         # seconds
+  train_ratio: 0.8            # 80/20 patient-level split
+  seed: 42
+
+# Audio / Spectrogram
+audio:
+  num_mel_bins: 128
+  target_length: 512          # time frames (~5s at 10ms shift)
+  frame_shift: 10             # ms
+  norm_mean: -11.605727       # from step2_get_norm_stats.py
+  norm_std: 4.965201         # from step2_get_norm_stats.py
+
+# Augmentation (training only)
+augmentation:
+  freq_mask: 32
+  time_mask: 128
+  mixup_rate: 0.2
+  add_noise: true
+
+# Model (ICBHIMambaNet)
+model:
+  num_classes: 4
+  d_model: 384
+  n_layers: 12
+  patch_size: [16, 16]
+  dropout: 0.3
+
+# Training (identical for all models)
+training:
+  batch_size: 16
+  grad_accum_steps: 4         # effective batch = 64
+  num_epochs: 60
+  warmup_epochs: 5
+  learning_rate: 5.0e-4
+  min_lr: 1.0e-6
+  weight_decay: 3.0e-4
+  num_workers: 4
+  seed: 42
+  use_amp: true               # mixed precision
+
+# Loss
+loss:
+  focal_gamma: 1.5
+  class_weights: [1.8, 1.0, 3.0, 5.0]  # [normal, crackle, wheeze, both]
+  label_smoothing: 0.05
+
+# Models to train in comparative study
+models:
+  - mfcc_mlp
+  - cnn2d
+  - alexnet
+  - vgg16
+  - resnet50
+  - vit_small
+  - mamba
