@@ -49,7 +49,7 @@ NUM_WORKERS  = 4
 FBANK_SIZE   = (TARGET_LEN, NUM_MEL_BINS)
 
 MODEL_DISPLAY = {
-    "mfcc_mlp":    "Mel-FB + MLP",
+    "mfcc_mlp":    "MFCC + MLP",
     "cnn2d":       "CNN-2D",
     "alexnet":     "AlexNet",
     "vgg16":       "VGG-16",

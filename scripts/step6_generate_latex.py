@@ -22,7 +22,7 @@ OUT_DIR     = os.path.join(PROJECT_ROOT, "figures")
 NUM_CLASSES = 4
 
 MODEL_DISPLAY = {
-    "mfcc_mlp":    "Mel-FB + MLP",
+    "mfcc_mlp":    "MFCC + MLP",
     "cnn2d":       "CNN-2D",
     "alexnet":     "AlexNet",
     "vgg16":       "VGG-16",
