@@ -1,6 +1,5 @@
-# ICBHIMambaNet: SSM-Inspired Respiratory Sound Classification
-
-> **Beyond Self-Attention: State Space Models for Data-Efficient Respiratory Sound Classification**  
+# ICBHIMamba-GRU---an SSM-inspired architecture using a GRU-based recurrent state mixer
+> **Minority-Class Collapse in Respiratory Sound Classification: A Controlled Comparison of CNNs, Transformers, and State Space Models**  
 > Zakaria Neili and Kenneth Sundaraj  
 > *Submitted to IEEE Journal of Biomedical and Health Informatics (JBHI)*
 
@@ -12,7 +11,7 @@
 
 ## Overview
 
-This repository provides the **complete, reproducible** implementation for a rigorous comparative study of **seven deep learning architectures** for 4-class respiratory sound classification on the [ICBHI 2017 benchmark](https://bhichallenge.med.auth.gr/). All models are trained under **strictly identical conditions** (same data splits, augmentation, loss, optimizer, and evaluation protocol).
+This repository provides the **complete, reproducible** implementation for a rigorous comparative study of **eight deep learning architectures** for 4-class respiratory sound classification on the [ICBHI 2017 benchmark](https://bhichallenge.med.auth.gr/). All models are trained under **strictly identical conditions** (same data splits, augmentation, loss, optimizer, and evaluation protocol).
 
 ### Architectures Compared
 
@@ -24,18 +23,20 @@ This repository provides the **complete, reproducible** implementation for a rig
 | 4 | VGG-16 | Deep CNN | 52.47M | ImageNet |
 | 5 | ResNet-50 | Residual CNN | 24.55M | ImageNet |
 | 6 | ViT-Small | Vision Transformer | 21.48M | No |
-| 7 | **ICBHIMambaNet** | SSM-inspired (GRU-based) | **11.49M** | No |
+| 7 | **ICBHIMamba-GRU** | SSM-inspired (GRU-based) | **11.49M** | No |
+| 8 | ICBHIMamba-SSM | native Mamba selective scan kernel | 11.78M | No |
 
 ### Key Finding
 
-ICBHIMambaNet achieves the best ICBHI score (54.51%) among all from-scratch models, outperforming ViT-Small (51.16%) with 47% fewer parameters, demonstrating that SSM-inspired sequential inductive bias is superior to self-attention for data-scarce medical audio.
+We present ICBHIMamba-GRU, an SSM-inspired model using a GRU-based recurrent state mixer, which is the only from-scratch sequence model that maintains
+balanced class discrimination across all four pathological sound types, achieving 56.33% ICBHI score with only 11.49M parameters.
 
 ---
 
 ## Project Structure
 
 ```
-ICBHIMamba-JBHI/
+ICBHIMamba-GRU-JBHI/
 ├── README.md                         ← This file
 ├── requirements.txt                  ← Python dependencies
 ├── setup_environment.sh              ← Environment setup script
@@ -138,9 +139,9 @@ python scripts/step3_train_all_models.py --models vgg16 resnet50
 
 ---
 
-## ICBHIMambaNet Architecture
+## ICBHIMamba-GRU Architecture
 
-ICBHIMambaNet adapts the Mamba State Space Model design principles for respiratory sound classification, implemented in pure PyTorch for hardware portability:
+ICBHIMamba-GRU adapts the Mamba State Space Model design principles for respiratory sound classification, implemented in pure PyTorch for hardware portability:
 
 ```
 Mel-Spectrogram [B, 512, 128]
@@ -197,17 +198,20 @@ Following the ICBHI 2017 challenge guidelines:
 
 ## Results
 
-| Model | Acc(%) | Se(%) | Sp(%) | ICBHI(%) | Params(M) |
-|-------|--------|-------|-------|----------|-----------|
-| VGG-16† | **50.31** | **43.06** | **81.61** | **62.33** | 52.47 |
-| ResNet-50† | 49.38 | 42.71 | 81.45 | 62.08 | 24.55 |
-| CNN-2D | 42.69 | 36.63 | 79.47 | 58.05 | 4.85 |
-| **ICBHIMambaNet** | 29.39 | 31.78 | 77.25 | **54.51** | **11.49** |
-| MFCC + MLP | 27.97 | 30.71 | 77.27 | 53.99 | 0.41 |
-| AlexNet | 32.09 | 30.92 | 76.97 | 53.94 | 37.30 |
-| ViT-Small | 20.21 | 26.81 | 75.51 | 51.16 | 21.48 |
+### Results
 
-† = ImageNet pretrained (transfer learning)
+| Model     | Acc (%)      | Se (%)          | Sp (%)          | ICBHI(%)        | Normal (%) | Crackle (%) | Wheeze (%) | Both (%) | Params    | Inference (ms) |
+|-----------|--------------|-----------------|-----------------|-----------------|------------|-------------|------------|----------|-----------|----------------|
+| VGG-16    | 60.25        | 47.65           | 84.61           | 66.13           | 72.00      | 53.71       | 41.26      | 23.61    | 52.47M    | 3.675          |
+| ResNet-50 | 59.07        | 44.36           | 83.87           | 64.11           | 75.48      | 39.39       | 51.46      | 11.11    | 24.55M    | 3.578          |
+| CNN-2D    | 39.82        | 34.64           | 79.64           | 57.14           | 48.39      | 24.81       | 41.75      | 23.61    | 4.85M     | 1.942          |
+| ViT-Small | 26.45        | 34.03           | 78.73           | 56.38           | 37.81      | 0.00        | 13.59      | 84.72    | 21.48M    | 3.541          |
+| ICBHIMamba-GRU|35.18     | 35.87           | 76.80           | 56.33           | 40.77      | 29.67       | 17.48      | 55.56    | **11.49M**| 5.227          |
+| Mamba-Real| 24.79        | 33.23           | 78.83           | 56.03           | 37.03      | 0.00        | 1.46       | 94.44    | 11.78M    | 4.112          |
+| MFCC+MLP  | 20.15        | 31.55           | 77.26           | 54.41           | 26.71      | 0.00        | 9.22       | 90.28    | 0.41M     | 1.032          |
+| AlexNet   | 17.31        | 30.55           | 76.80           | 53.68           | 21.94      | 0.00        | 5.83       | 94.44    | 37.30M    | 1.529          |
+
+* = ImageNet pretrained (transfer learning)
 
 ---
 
@@ -217,10 +221,10 @@ If you use this code, please cite:
 
 ```bibtex
 @article{neili2025icbhimamba,
-  title={Beyond Self-Attention: State Space Models for Data-Efficient Respiratory Sound Classification},
+  title={Minority-Class Collapse in Respiratory Sound Classification: A Controlled Comparison of CNNs, Transformers, and State Space Models},
   author={Neili, Zakaria and Sundaraj, Kenneth},
   journal={IEEE Journal of Biomedical and Health Informatics},
-  year={2025}
+  year={2026}
 }
 ```
 
