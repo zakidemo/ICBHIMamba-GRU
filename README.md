@@ -1,4 +1,4 @@
-# ICBHIMamba-GRU---an SSM-inspired architecture using a GRU-based recurrent state mixer
+# Mamba-GRU---an SSM-inspired architecture using a GRU-based recurrent state mixer
 > **Minority-Class Collapse in Respiratory Sound Classification: A Controlled Comparison of CNNs, Transformers, and State Space Models**  
 > Zakaria Neili and Kenneth Sundaraj  
 > *Submitted to IEEE Journal of Biomedical and Health Informatics (JBHI)*
@@ -23,12 +23,12 @@ This repository provides the **complete, reproducible** implementation for a rig
 | 4 | VGG-16 | Deep CNN | 52.47M | ImageNet |
 | 5 | ResNet-50 | Residual CNN | 24.55M | ImageNet |
 | 6 | ViT-Small | Vision Transformer | 21.48M | No |
-| 7 | **ICBHIMamba-GRU** | SSM-inspired (GRU-based) | **11.49M** | No |
-| 8 | ICBHIMamba-SSM | native Mamba selective scan kernel | 11.78M | No |
+| 7 | **Mamba-GRU** | SSM-inspired (GRU-based) | **11.49M** | No |
+| 8 | Mamba-SSM | native Mamba selective scan kernel | 11.78M | No |
 
 ### Key Finding
 
-We present ICBHIMamba-GRU, an SSM-inspired model using a GRU-based recurrent state mixer, which is the only from-scratch sequence model that maintains
+We present Mamba-GRU, an SSM-inspired model using a GRU-based recurrent state mixer, which is the only from-scratch sequence model that maintains
 balanced class discrimination across all four pathological sound types, achieving 56.33% ICBHI score with only 11.49M parameters.
 
 ---
@@ -36,7 +36,7 @@ balanced class discrimination across all four pathological sound types, achievin
 ## Project Structure
 
 ```
-ICBHIMamba-GRU-JBHI/
+Mamba-GRU-JBHI/
 ├── README.md                         ← This file
 ├── requirements.txt                  ← Python dependencies
 ├── setup_environment.sh              ← Environment setup script
@@ -139,9 +139,9 @@ python scripts/step3_train_all_models.py --models vgg16 resnet50
 
 ---
 
-## ICBHIMamba-GRU Architecture
+## Mamba-GRU Architecture
 
-ICBHIMamba-GRU adapts the Mamba State Space Model design principles for respiratory sound classification, implemented in pure PyTorch for hardware portability:
+Mamba-GRU adapts the Mamba State Space Model design principles for respiratory sound classification, implemented in pure PyTorch for hardware portability:
 
 ```
 Mel-Spectrogram [B, 512, 128]
@@ -200,16 +200,16 @@ Following the ICBHI 2017 challenge guidelines:
 
 ### Results
 
-| Model     | Acc (%)      | Se (%)          | Sp (%)          | ICBHI(%)        | Normal (%) | Crackle (%) | Wheeze (%) | Both (%) | Params    | Inference (ms) |
-|-----------|--------------|-----------------|-----------------|-----------------|------------|-------------|------------|----------|-----------|----------------|
-| VGG-16    | 60.25        | 47.65           | 84.61           | 66.13           | 72.00      | 53.71       | 41.26      | 23.61    | 52.47M    | 3.675          |
-| ResNet-50 | 59.07        | 44.36           | 83.87           | 64.11           | 75.48      | 39.39       | 51.46      | 11.11    | 24.55M    | 3.578          |
-| CNN-2D    | 39.82        | 34.64           | 79.64           | 57.14           | 48.39      | 24.81       | 41.75      | 23.61    | 4.85M     | 1.942          |
-| ViT-Small | 26.45        | 34.03           | 78.73           | 56.38           | 37.81      | 0.00        | 13.59      | 84.72    | 21.48M    | 3.541          |
-| ICBHIMamba-GRU|35.18     | 35.87           | 76.80           | 56.33           | 40.77      | 29.67       | 17.48      | 55.56    | **11.49M**| 5.227          |
-| Mamba-Real| 24.79        | 33.23           | 78.83           | 56.03           | 37.03      | 0.00        | 1.46       | 94.44    | 11.78M    | 4.112          |
-| MFCC+MLP  | 20.15        | 31.55           | 77.26           | 54.41           | 26.71      | 0.00        | 9.22       | 90.28    | 0.41M     | 1.032          |
-| AlexNet   | 17.31        | 30.55           | 76.80           | 53.68           | 21.94      | 0.00        | 5.83       | 94.44    | 37.30M    | 1.529          |
+| Model     | Acc (%)      | Se (%)          | Sp (%)| ICBHI(%)    | Normal (%) | Crackle (%) | Wheeze (%) | Both (%) | Params    | Inference(ms)|
+|-----------|--------------|-----------------|-------|-------------|------------|-------------|------------|----------|-----------|--------------|
+| VGG-16    | 60.25        | 47.65           | 84.61 | 66.13       | 72.00      | 53.71       | 41.26      | 23.61    | 52.47M    | 3.675        |
+| ResNet-50 | 59.07        | 44.36           | 83.87 | 64.11       | 75.48      | 39.39       | 51.46      | 11.11    | 24.55M    | 3.578        |
+| CNN-2D    | 39.82        | 34.64           | 79.64 | 57.14       | 48.39      | 24.81       | 41.75      | 23.61    | 4.85M     | 1.942        |
+| ViT-Small | 26.45        | 34.03           | 78.73 | 56.38       | 37.81      | 0.00        | 13.59      | 84.72    | 21.48M    | 3.541        |
+| Mamba-GRU |35.18         | 35.87           | 76.80 | 56.33       | 40.77      | 29.67       | 17.48      | 55.56    | **11.49M**| 5.227        |
+| Mamba-SSM | 24.79        | 33.23           | 78.83 | 56.03       | 37.03      | 0.00        | 1.46       | 94.44    | 11.78M    | 4.112        |
+| MFCC+MLP  | 20.15        | 31.55           | 77.26 | 54.41       | 26.71      | 0.00        | 9.22       | 90.28    | 0.41M     | 1.032        |
+| AlexNet   | 17.31        | 30.55           | 76.80 | 53.68       | 21.94      | 0.00        | 5.83       | 94.44    | 37.30M    | 1.529        |
 
 * = ImageNet pretrained (transfer learning)
 
@@ -221,7 +221,7 @@ If you use this code, please cite:
 
 ```bibtex
 @article{neili2025icbhimamba,
-  title={Minority-Class Collapse in Respiratory Sound Classification: A Controlled Comparison of CNNs, Transformers, and State Space Models},
+  title={Mamba-GRU: Hardware‑Agnostic Selective State Space Modeling for Respiratory Sound Classification},
   author={Neili, Zakaria and Sundaraj, Kenneth},
   journal={IEEE Journal of Biomedical and Health Informatics},
   year={2026}
