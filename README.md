@@ -1,5 +1,5 @@
 # Mamba-GRU---an SSM-inspired architecture using a GRU-based recurrent state mixer
-> **Minority-Class Collapse in Respiratory Sound Classification: A Controlled Comparison of CNNs, Transformers, and State Space Models**  
+> **Mamba-GRU: Hardware‑Agnostic Selective State Space Modeling for Respiratory Sound Classification**  
 > Zakaria Neili and Kenneth Sundaraj  
 > *Submitted to IEEE Journal of Biomedical and Health Informatics (JBHI)*
 
